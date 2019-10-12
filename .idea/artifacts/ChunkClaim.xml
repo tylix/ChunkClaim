@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="ChunkClaim">
+    <output-path>$PROJECT_DIR$/../../../../1.8server/plugins</output-path>
+    <root id="archive" name="ChunkClaim.jar">
+      <element id="module-output" name="ChunkClaim" />
+    </root>
+  </artifact>
+</component>

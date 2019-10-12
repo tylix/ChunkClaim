@@ -15,8 +15,6 @@ import me.tylix.chunkclaim.listener.ProtectionListener;
 import me.tylix.chunkclaim.message.manager.MessageManager;
 import me.tylix.chunkclaim.module.manager.ModuleManager;
 import org.bukkit.Bukkit;
-import org.bukkit.WorldCreator;
-import org.bukkit.WorldType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;

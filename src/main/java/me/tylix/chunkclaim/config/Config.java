@@ -1,5 +1,7 @@
 package me.tylix.chunkclaim.config;
 
+import com.google.common.collect.Lists;
+
 public enum Config {
 
     MESSAGES("messages_DE_de"),
