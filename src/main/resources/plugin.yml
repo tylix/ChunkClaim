@@ -1,0 +1,8 @@
+name: ChunkClaim
+version: 0.1
+author: tylix
+main: me.tylix.chunkclaim.ChunkClaim
+commands:
+  chunkclaim:
+    aliases:
+      - cc
