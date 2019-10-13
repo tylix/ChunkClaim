@@ -60,9 +60,9 @@ public class ChunkClaimCommand implements CommandExecutor {
                         }
 
                         player.sendMessage("§7This Chunk is §afree§8.");
-                       /* player.sendMessage(ChunkClaim.INSTANCE.getPrefix() + "§7Enter §b/chunk claim §7to claim this Chunk for §b" + new DecimalFormat().format(must).replace(",", ".") + " Vens§8.");
-                        if (ChunkClaim.INSTANCE.getGamePlayer(player).getVensInPurse() < must)
-                            player.sendMessage(ChunkClaim.INSTANCE.getPrefix() + "§7You still need §b" + new DecimalFormat().format((must - ChunkClaim.INSTANCE.getGamePlayer(player).getVensInPurse())).replace(",", ".") + " Vens §7more to buy this Chunk§8!");*/
+                        player.sendMessage("§7Enter §b/chunk claim §7to claim this Chunk for §b" + new DecimalFormat().format(must).replace(",", ".") + " Vens§8.");
+                        if (ChunkClaim.INSTANCE.getChunkPlayer(player).getPlayerData().getMoney() < must)
+                            player.sendMessage(Message.NOT_ENOUGH_MONEY.getMessage(must - ChunkClaim.INSTANCE.getChunkPlayer(player).getPlayerData().getMoney()));
                         return false;
                     }
 
@@ -80,6 +80,10 @@ public class ChunkClaimCommand implements CommandExecutor {
                     } catch (ScriptException e) {
                         e.printStackTrace();
                     }
+                } else if(strings[0].equalsIgnoreCase("map")) {
+                    player.sendMessage(" ");
+                    player.sendMessage(ChunkClaim.INSTANCE.getChunkManager().getChunkMap(player.getLocation()));
+                    player.sendMessage(" ");
                 }
                 break;
             case 2:

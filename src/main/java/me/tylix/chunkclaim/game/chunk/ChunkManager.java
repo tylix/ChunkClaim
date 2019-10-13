@@ -2,6 +2,7 @@ package me.tylix.chunkclaim.game.chunk;
 
 import com.google.gson.Gson;
 import me.tylix.chunkclaim.ChunkClaim;
+import me.tylix.chunkclaim.config.Config;
 import me.tylix.chunkclaim.cuboid.Cuboid;
 import me.tylix.chunkclaim.game.chunk.data.ChunkData;
 import me.tylix.chunkclaim.game.chunk.location.ChunkLocation;
@@ -128,4 +129,30 @@ public class ChunkManager {
         return chunks;
     }
 
+    public String getChunkMap(Location location) {
+        final int size = 10;
+        final int halfSize = size / 2;
+        final StringBuilder stringBuilder = new StringBuilder();
+        final List<String> rows = new ArrayList<>();
+
+        for (int i = 1; i < halfSize + 1; i++) {
+            int chunkAt = (i + 16);
+            final Chunk chunk = Bukkit.getWorld((String) Config.CHUNK_WORLD.getData()).getChunkAt(location.add(chunkAt, 0, 0));
+            boolean free = ChunkClaim.INSTANCE.getChunkManager().isFree(chunk);
+            rows.add(free ? "§a█" : "§c█");
+        }
+
+
+        for (int i = 1; i < halfSize + 1; i++) {
+            int chunkAt = (i + 16);
+            final Chunk chunk = Bukkit.getWorld((String) Config.CHUNK_WORLD.getData()).getChunkAt(location.add(chunkAt, 0, chunkAt));
+            boolean free = ChunkClaim.INSTANCE.getChunkManager().isFree(chunk);
+            rows.add(free ? "§a█" : "§c█");
+        }
+
+        for (int i = 0; i < rows.size(); i++)
+            stringBuilder.append(rows.get((rows.size() - i) - 1)).append("\n");
+
+        return stringBuilder.toString();
+    }
 }
