@@ -64,7 +64,7 @@ public class ChunkManager {
     public Location getCenter(final ChunkData chunkData) {
         final Cuboid cuboid = new Cuboid(chunkData.getMinLocation().toBukkitLocation(), chunkData.getMaxLocation().toBukkitLocation());
         final Location center = cuboid.getCenter();
-        center.setY(center.getWorld().getHighestBlockYAt(center));
+        center.setY(center.getWorld().getHighestBlockYAt(center) + 1);
         return center;
     }
 

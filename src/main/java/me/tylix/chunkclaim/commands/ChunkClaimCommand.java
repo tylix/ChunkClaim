@@ -2,10 +2,12 @@ package me.tylix.chunkclaim.commands;
 
 import me.tylix.chunkclaim.ChunkClaim;
 import me.tylix.chunkclaim.game.chunk.ChunkObject;
+import me.tylix.chunkclaim.game.chunk.data.ChunkData;
 import me.tylix.chunkclaim.game.setup.Setup;
 import me.tylix.chunkclaim.message.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,6 +18,8 @@ import org.bukkit.plugin.Plugin;
 
 import javax.script.ScriptException;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChunkClaimCommand implements CommandExecutor {
 
@@ -45,6 +49,22 @@ public class ChunkClaimCommand implements CommandExecutor {
                     }
                 }
                 break;
+            case 2:
+                if (strings[0].equalsIgnoreCase("teleport") || strings[0].equalsIgnoreCase("tp")) {
+                    final String chunkId = strings[1];
+                    final List<String> chunkIds = new ArrayList<>();
+                    ChunkClaim.INSTANCE.getChunkPlayer(player).getPlayerData().getChunks().forEach(chunkData -> chunkIds.add(chunkData.getId()));
+                    if (!chunkIds.contains(strings[1])) {
+                        player.sendMessage(Message.CHUNK_NOT_FOUND_ID.getMessage());
+                        return false;
+                    }
+                    final ChunkData chunkData = ChunkClaim.INSTANCE.getChunkManager().getChunkDataById(chunkId);
+                    final Location location = ChunkClaim.INSTANCE.getChunkManager().getCenter(chunkData);
+                    location.setYaw(player.getLocation().getYaw());
+                    location.setPitch(player.getLocation().getPitch());
+                    player.teleport(location);
+                }
+                break;
             default:
                 sendHelp(player, 2);
                 break;
@@ -59,7 +79,8 @@ public class ChunkClaimCommand implements CommandExecutor {
             case 1:
                 if (strings[0].equalsIgnoreCase("setup")) {
                     player.sendMessage(Message.PREFIX.getMessage() + " §7Starting Setup..");
-                    new Setup(player);
+                    Setup setup = new Setup(player);
+                    ChunkClaim.INSTANCE.getSetupMap().put(player.getUniqueId(), setup);
                 } else if (strings[0].equalsIgnoreCase("admin")) {
                     sendHelp(player, 1);
                 } else if (strings[0].equalsIgnoreCase("user")) {

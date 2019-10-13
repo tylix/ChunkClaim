@@ -18,9 +18,11 @@ public enum Message {
     SUCCESSFULLY_CLAIMED_CHUNK("$prefix$ §7You §asuccessfully §7claimed a chunk for §e{0} §7Money!"),
     CHUNK_ALREADY_ClAIMED("$prefix$ §cThis chunk is already claimed!"),
     CHUNK_ALREADY_YOURS("$prefix$ §cThis chunk is already your chunk!"),
+    CHUNK_NOT_FOUND_ID("$prefix$ §cYou don't have a chunk with this id!"),
     SCOREBOARD_ENABLED(true),
     DISPLAY_NAME("ChunkClaim"),
-    SCOREBOARD(Lists.newArrayList(" ", "§7Money§8:", "§6$money$", " ", "§7Chunks§8:", "§a$chunk_size$", " ", "§7Chunk by§8:", "§b$chunk_owner$", " "));
+    SCOREBOARD(Lists.newArrayList(" ", "§7Money§8:", "§6$money$", " ", "§7Chunks§8:", "§a$chunk_size$", " ", "§7Chunk by§8:", "§b$chunk_owner$", " ")),
+    UNKNOWN_CHUNK_OWNER("§bNone");
 
     private Object message;
 

@@ -45,7 +45,7 @@ public class ChunkPlayer {
     private void create() {
         new File("plugins//ChunkClaim").mkdirs();
         new File("plugins//ChunkClaim//users").mkdirs();
-        final PlayerData playerData = new PlayerData(0, 0, 100, 100, new ArrayList<>());
+        final PlayerData playerData = new PlayerData(0, 0, 100, 500, new ArrayList<>());
 
         final JsonConfig jsonConfig = new JsonConfig(this.file);
         jsonConfig.set("userData", playerData);

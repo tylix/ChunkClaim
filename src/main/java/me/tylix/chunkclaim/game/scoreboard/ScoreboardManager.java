@@ -39,7 +39,18 @@ public class ScoreboardManager {
         for (int i = 0; i < scores.size(); i++) {
             final Team team = scoreboard.registerNewTeam("x" + score);
             String prefix = scores.get(i);
-            prefix = prefix.replace("$money$", new DecimalFormat().format(playerData.getMoney()).replace(",", ".")).replace("$chunk_size$", String.valueOf(playerData.getChunks().size()));
+
+            String owner;
+            if (ChunkClaim.INSTANCE.getChunkManager().getOwner(player.getLocation().getChunk()) == null)
+                owner = Message.UNKNOWN_CHUNK_OWNER.getMessage();
+            else {
+                owner = Bukkit.getOfflinePlayer(ChunkClaim.INSTANCE.getChunkManager().getOwner(player.getLocation().getChunk())).getName();
+                /*if (prefix.contains("$chunk_owner$"))
+                    if ((prefix.length() + owner.length()) >= 16)
+                        owner = owner.substring(0, 16);*/
+            }
+
+            prefix = prefix.replace("$money$", new DecimalFormat().format(playerData.getMoney()).replace(",", ".")).replace("$chunk_size$", String.valueOf(playerData.getChunks().size())).replace("$chunk_owner$", owner);
             team.setPrefix(prefix);
             team.addEntry(ChatColor.values()[i].toString());
             objective.getScore(ChatColor.values()[i].toString()).setScore(score);

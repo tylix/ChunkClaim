@@ -17,7 +17,7 @@ public class ModuleManager {
     public ModuleManager() {
         this.modules = new ArrayList<>();
         if (!file.exists())
-            file.mkdir();
+            file.mkdirs();
     }
 
     public void loadModules() {

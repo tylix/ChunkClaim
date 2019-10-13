@@ -9,6 +9,8 @@ import me.tylix.chunkclaim.config.ConfigManager;
 import me.tylix.chunkclaim.game.chunk.ChunkManager;
 import me.tylix.chunkclaim.game.player.ChunkPlayer;
 import me.tylix.chunkclaim.game.scoreboard.ScoreboardManager;
+import me.tylix.chunkclaim.game.setup.Setup;
+import me.tylix.chunkclaim.listener.PlayerChatEventListener;
 import me.tylix.chunkclaim.listener.PlayerJoinEventListener;
 import me.tylix.chunkclaim.listener.PlayerQuitEventListener;
 import me.tylix.chunkclaim.listener.ProtectionListener;
@@ -20,10 +22,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 public class ChunkClaim extends JavaPlugin {
 
@@ -31,6 +30,7 @@ public class ChunkClaim extends JavaPlugin {
 
     private final List<ChunkPlayer> players = new ArrayList<>();
     private final List<UUID> registeredPlayers = new ArrayList<>();
+    private final Map<UUID, Setup> setupMap = new HashMap<>();
 
     private final Gson gson = new Gson(),
             prettyGson = new GsonBuilder().setPrettyPrinting().create();
@@ -90,6 +90,7 @@ public class ChunkClaim extends JavaPlugin {
     }
 
     private void registerListener(PluginManager pluginManager) {
+        pluginManager.registerEvents(new PlayerChatEventListener(), this);
         pluginManager.registerEvents(new PlayerJoinEventListener(), this);
         pluginManager.registerEvents(new PlayerQuitEventListener(), this);
         pluginManager.registerEvents(new ProtectionListener(), this);
@@ -170,5 +171,9 @@ public class ChunkClaim extends JavaPlugin {
 
     public ModuleManager getModuleManager() {
         return moduleManager;
+    }
+
+    public Map<UUID, Setup> getSetupMap() {
+        return setupMap;
     }
 }
