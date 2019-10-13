@@ -29,20 +29,20 @@ public class ChunkPlayer {
         this.file = new File("plugins//ChunkClaim//users//" + uuid.toString() + ".yml");
         this.cfg = YamlConfiguration.loadConfiguration(file);
 
-        if (!exists())
-            create();
+        if (exists()) {
+            final JsonConfig jsonConfig = new JsonConfig(this.file);
+            playerData = jsonConfig.get("userData", PlayerData.class);
 
-        final JsonConfig jsonConfig = new JsonConfig(this.file);
-        playerData = jsonConfig.get("userData", PlayerData.class);
-
-        setChunkSize(playerData.getChunks().size());
+            setChunkSize(playerData.getChunks().size());
+        }
     }
 
     private boolean exists() {
         return file.exists();
     }
 
-    private void create() {
+    public boolean createIfNotExists() {
+        if (exists()) return true;
         new File("plugins//ChunkClaim").mkdirs();
         new File("plugins//ChunkClaim//users").mkdirs();
         final PlayerData playerData = new PlayerData(0, 0, 100, 500, new ArrayList<>());
@@ -52,6 +52,12 @@ public class ChunkPlayer {
         jsonConfig.saveConfig();
 
         ChunkClaim.INSTANCE.getRegisteredPlayers().add(uuid);
+
+        this.playerData = jsonConfig.get("userData", PlayerData.class);
+
+        setChunkSize(playerData.getChunks().size());
+
+        return false;
     }
 
     public PlayerData getPlayerData() {

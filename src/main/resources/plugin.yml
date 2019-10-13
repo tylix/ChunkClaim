@@ -6,3 +6,4 @@ commands:
   chunkclaim:
     aliases:
       - cc
+      - chunk

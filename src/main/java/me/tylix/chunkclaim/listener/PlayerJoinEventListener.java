@@ -5,6 +5,7 @@ import me.tylix.chunkclaim.game.LocationManager;
 import me.tylix.chunkclaim.game.player.ChunkPlayer;
 import me.tylix.chunkclaim.game.scoreboard.ScoreboardManager;
 import me.tylix.chunkclaim.message.Message;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,8 +21,11 @@ public class PlayerJoinEventListener implements Listener {
         ChunkClaim.INSTANCE.getPlayers().add(new ChunkPlayer(player.getUniqueId()));
 
         try {
-            final Location location = new LocationManager("ChunkClaim").getLocation("Spawn");
-            player.teleport(location);
+            boolean exists = ChunkClaim.INSTANCE.getChunkPlayer(player).createIfNotExists();
+            if (!exists) {
+                final Location location = new LocationManager("ChunkClaim").getLocation("Spawn");
+                player.teleport(location);
+            }
         } catch (Exception e) {
             player.sendMessage(" ");
             player.sendMessage(Message.PREFIX.getMessage() + " §cThe Spawn doesn't set yet!");

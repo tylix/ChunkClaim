@@ -1,8 +1,11 @@
 package me.tylix.chunkclaim.commands;
 
 import me.tylix.chunkclaim.ChunkClaim;
+import me.tylix.chunkclaim.config.Config;
+import me.tylix.chunkclaim.game.LocationManager;
 import me.tylix.chunkclaim.game.chunk.ChunkObject;
 import me.tylix.chunkclaim.game.chunk.data.ChunkData;
+import me.tylix.chunkclaim.game.chunk.display.ChunkDisplayTask;
 import me.tylix.chunkclaim.game.setup.Setup;
 import me.tylix.chunkclaim.message.Message;
 import org.bukkit.Bukkit;
@@ -18,6 +21,7 @@ import org.bukkit.plugin.Plugin;
 
 import javax.script.ScriptException;
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +36,36 @@ public class ChunkClaimCommand implements CommandExecutor {
         switch (strings.length) {
             case 1:
                 if (strings[0].equalsIgnoreCase("info")) {
-                    player.sendMessage(String.valueOf(ChunkClaim.INSTANCE.getChunkManager().isFree(chunk)));
+                    if (!player.getWorld().getName().equals(Config.CHUNK_WORLD.getData())) {
+                        player.sendMessage(Message.CHUNK_NOT_IN_WORLD.getMessage());
+                        return false;
+                    }
+                    if (ChunkClaim.INSTANCE.getChunkManager().isInSpawnArea(player.getLocation().getChunk()) || player.getLocation().distance(new LocationManager("ChunkClaim").getLocation("Spawn")) < (int) Config.SPAWN_PROTECTION_RADIUS.getData()) {
+                        player.sendMessage(Message.CHUNK_IN_SPAWN.getMessage());
+                        return false;
+                    }
+
+                    new ChunkDisplayTask().display(player);
+
+                    final Location location = player.getLocation();
+                    location.setPitch(-45);
+                    player.teleport(location);
+
+                    if (ChunkClaim.INSTANCE.getChunkManager().getOwner(player.getLocation().getChunk()) == null) {
+                        int must = 0;
+                        try {
+                            must = ChunkClaim.INSTANCE.getChunkPlayer(player).getNextChunkPrice();
+                        } catch (ScriptException e) {
+                            e.printStackTrace();
+                        }
+
+                        player.sendMessage("§7This Chunk is §afree§8.");
+                       /* player.sendMessage(ChunkClaim.INSTANCE.getPrefix() + "§7Enter §b/chunk claim §7to claim this Chunk for §b" + new DecimalFormat().format(must).replace(",", ".") + " Vens§8.");
+                        if (ChunkClaim.INSTANCE.getGamePlayer(player).getVensInPurse() < must)
+                            player.sendMessage(ChunkClaim.INSTANCE.getPrefix() + "§7You still need §b" + new DecimalFormat().format((must - ChunkClaim.INSTANCE.getGamePlayer(player).getVensInPurse())).replace(",", ".") + " Vens §7more to buy this Chunk§8!");*/
+                        return false;
+                    }
+
                 } else if (strings[0].equalsIgnoreCase("claim")) {
                     if (ChunkClaim.INSTANCE.getChunkManager().getOwner(chunk) != null && ChunkClaim.INSTANCE.getChunkManager().getOwner(chunk).equals(player.getUniqueId())) {
                         player.sendMessage(Message.CHUNK_ALREADY_YOURS.getMessage());

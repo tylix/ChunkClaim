@@ -43,6 +43,19 @@ public class ChunkManager {
         }
     }
 
+    public boolean isInSpawnArea(Chunk chunk) {
+        for (int x = 0; x < 16; x++)
+            for (int y = 0; y < 256; y++)
+                for (int z = 0; z < 16; z++) {
+                    final Block b = chunk.getBlock(x, y, z);
+                    if (ChunkClaim.INSTANCE.getSpawnCuboid().contains(b))
+                        return true;
+                }
+
+        return false;
+    }
+
+
     public boolean isFree(final Chunk chunk) {
         final ChunkLocation maxLocation = new ChunkLocation(this.getMaxLocation(chunk));
         final ChunkLocation minLocation = new ChunkLocation(this.getMinLocation(chunk));

@@ -6,14 +6,13 @@ import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import me.tylix.chunkclaim.commands.ChunkClaimCommand;
 import me.tylix.chunkclaim.config.ConfigManager;
+import me.tylix.chunkclaim.cuboid.Cuboid;
+import me.tylix.chunkclaim.game.LocationManager;
 import me.tylix.chunkclaim.game.chunk.ChunkManager;
 import me.tylix.chunkclaim.game.player.ChunkPlayer;
 import me.tylix.chunkclaim.game.scoreboard.ScoreboardManager;
 import me.tylix.chunkclaim.game.setup.Setup;
-import me.tylix.chunkclaim.listener.PlayerChatEventListener;
-import me.tylix.chunkclaim.listener.PlayerJoinEventListener;
-import me.tylix.chunkclaim.listener.PlayerQuitEventListener;
-import me.tylix.chunkclaim.listener.ProtectionListener;
+import me.tylix.chunkclaim.listener.*;
 import me.tylix.chunkclaim.message.manager.MessageManager;
 import me.tylix.chunkclaim.module.manager.ModuleManager;
 import org.bukkit.Bukkit;
@@ -41,6 +40,8 @@ public class ChunkClaim extends JavaPlugin {
     private ChunkManager chunkManager;
     private ScoreboardManager scoreboardManager;
     private ModuleManager moduleManager;
+
+    private Cuboid spawnCuboid;
 
     @Override
     public void onEnable() {
@@ -75,6 +76,15 @@ public class ChunkClaim extends JavaPlugin {
 
         this.registerListener(Bukkit.getPluginManager());
         this.registerCommands();
+
+        loadSpawnArea();
+    }
+
+    public void loadSpawnArea() {
+        try {
+            this.spawnCuboid = new Cuboid(new LocationManager("ChunkClaim").getLocation("SpawnArea.1"), new LocationManager("ChunkClaim").getLocation("SpawnArea.2"));
+        } catch (Exception ignore) {
+        }
     }
 
     private void loadPlayers() {
@@ -93,6 +103,7 @@ public class ChunkClaim extends JavaPlugin {
         pluginManager.registerEvents(new PlayerChatEventListener(), this);
         pluginManager.registerEvents(new PlayerJoinEventListener(), this);
         pluginManager.registerEvents(new PlayerQuitEventListener(), this);
+        pluginManager.registerEvents(new PlayerMoveEventListener(), this);
         pluginManager.registerEvents(new ProtectionListener(), this);
     }
 
@@ -175,5 +186,9 @@ public class ChunkClaim extends JavaPlugin {
 
     public Map<UUID, Setup> getSetupMap() {
         return setupMap;
+    }
+
+    public Cuboid getSpawnCuboid() {
+        return spawnCuboid;
     }
 }

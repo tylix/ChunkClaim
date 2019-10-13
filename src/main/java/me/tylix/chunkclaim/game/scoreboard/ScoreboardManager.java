@@ -75,7 +75,16 @@ public class ScoreboardManager {
                 for (String s : scores) {
                     final Team team = scoreboard.getTeam("x" + score);
                     String prefix = s;
-                    prefix = prefix.replace("$money$", new DecimalFormat().format(playerData.getMoney()).replace(",", ".")).replace("$chunk_size$", String.valueOf(playerData.getChunks().size()));
+                    String owner;
+                    if (ChunkClaim.INSTANCE.getChunkManager().getOwner(player.getLocation().getChunk()) == null)
+                        owner = Message.UNKNOWN_CHUNK_OWNER.getMessage();
+                    else {
+                        owner = Bukkit.getOfflinePlayer(ChunkClaim.INSTANCE.getChunkManager().getOwner(player.getLocation().getChunk())).getName();
+                      /*if (prefix.contains("$chunk_owner$"))
+                          if ((prefix.length() + owner.length()) >= 16)
+                           owner = owner.substring(0, 16);*/
+                    }
+                    prefix = prefix.replace("$money$", new DecimalFormat().format(playerData.getMoney()).replace(",", ".")).replace("$chunk_size$", String.valueOf(playerData.getChunks().size())).replace("$chunk_owner$", owner);
                     team.setPrefix(prefix);
                     score--;
                 }
@@ -92,7 +101,18 @@ public class ScoreboardManager {
             for (String s : scores) {
                 final Team team = scoreboard.getTeam("x" + score);
                 String prefix = s;
-                prefix = prefix.replace("$money$", new DecimalFormat().format(playerData.getMoney()).replace(",", ".")).replace("$chunk_size$", String.valueOf(playerData.getChunks().size()));
+
+                String owner;
+                if (ChunkClaim.INSTANCE.getChunkManager().getOwner(target.getLocation().getChunk()) == null)
+                    owner = Message.UNKNOWN_CHUNK_OWNER.getMessage();
+                else {
+                    owner = Bukkit.getOfflinePlayer(ChunkClaim.INSTANCE.getChunkManager().getOwner(target.getLocation().getChunk())).getName();
+                /*if (prefix.contains("$chunk_owner$"))
+                    if ((prefix.length() + owner.length()) >= 16)
+                        owner = owner.substring(0, 16);*/
+                }
+
+                prefix = prefix.replace("$money$", new DecimalFormat().format(playerData.getMoney()).replace(",", ".")).replace("$chunk_size$", String.valueOf(playerData.getChunks().size())).replace("$chunk_owner$", owner);
                 team.setPrefix(prefix);
                 score--;
             }
