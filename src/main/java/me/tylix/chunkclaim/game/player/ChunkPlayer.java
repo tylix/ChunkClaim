@@ -26,7 +26,7 @@ public class ChunkPlayer {
 
     public ChunkPlayer(UUID uuid) {
         this.uuid = uuid;
-        this.file = new File("plugins//ChunkClaim//users//" + uuid.toString() + ".yml");
+        this.file = new File("plugins/ChunkClaim/data/users/" + uuid.toString() + ".yml");
         this.cfg = YamlConfiguration.loadConfiguration(file);
 
         if (exists()) {
@@ -43,9 +43,9 @@ public class ChunkPlayer {
 
     public boolean createIfNotExists() {
         if (exists()) return true;
-        new File("plugins//ChunkClaim").mkdirs();
-        new File("plugins//ChunkClaim//users").mkdirs();
-        final PlayerData playerData = new PlayerData(0, 0, 100, 500, new ArrayList<>());
+        new File("plugins/ChunkClaim/data").mkdirs();
+        new File("plugins/ChunkClaim/data/users").mkdirs();
+        final PlayerData playerData = new PlayerData(0, 0, 100, 500, Config.MESSAGES.getData().toString(), new ArrayList<>());
 
         final JsonConfig jsonConfig = new JsonConfig(this.file);
         jsonConfig.set("userData", playerData);
@@ -68,6 +68,7 @@ public class ChunkPlayer {
         final JsonConfig jsonConfig = new JsonConfig(this.file);
         jsonConfig.set("userData", playerData);
         jsonConfig.saveConfig();
+
         this.playerData = playerData;
 
         if (Bukkit.getPlayer(uuid) != null)

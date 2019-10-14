@@ -1,12 +1,12 @@
 package me.tylix.chunkclaim.message;
 
 import com.google.common.collect.Lists;
+import com.google.gson.Gson;
 import me.tylix.chunkclaim.ChunkClaim;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
 
 public enum Message {
 
@@ -26,7 +26,11 @@ public enum Message {
     SCOREBOARD_ENABLED(true),
     DISPLAY_NAME("ChunkClaim"),
     SCOREBOARD(Lists.newArrayList(" ", "§7Money§8:", "§6$money$", " ", "§7Chunks§8:", "§a$chunk_size$", " ", "§7Chunk by§8:", "§b$chunk_owner$", " ")),
-    UNKNOWN_CHUNK_OWNER("§bNone");
+    UNKNOWN_CHUNK_OWNER("§bNone"),
+    PAGE_NOT_EXISTS("$prefix$ §cThis page doesn't exists!"),
+    NOT_A_NUMBER("$prefix$ §cPlease enter a number!"),
+    HELP_PAGES(Lists.newArrayList(ChunkClaim.INSTANCE.getPrettyGson().toJson(new Gson().toJsonTree(new HelpPage(Lists.newArrayList("First ", "Second", "Third")))), ChunkClaim.INSTANCE.getPrettyGson().toJson(new Gson().toJsonTree(new HelpPage(Lists.newArrayList("Fourth", "Fifth", "Sixth"))))));
+
 
     private Object message;
 
@@ -53,4 +57,5 @@ public enum Message {
     public void setMessage(final Object message) {
         this.message = message;
     }
+
 }

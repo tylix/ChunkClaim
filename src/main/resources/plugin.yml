@@ -7,3 +7,8 @@ commands:
     aliases:
       - cc
       - chunk
+  chunkclaimadmin:
+    aliases:
+      - cca
+      - chunka
+api-version: 1.13

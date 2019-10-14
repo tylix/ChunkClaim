@@ -1,6 +1,7 @@
 package me.tylix.chunkclaim.message.manager;
 
 import me.tylix.chunkclaim.ChunkClaim;
+import me.tylix.chunkclaim.config.Config;
 import me.tylix.chunkclaim.message.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -12,7 +13,7 @@ import java.io.IOException;
 
 public class MessageManager {
 
-    private final File file = new File("plugins//ChunkClaim//messages//" + ChunkClaim.INSTANCE.getConfigManager().getCfg().getString("messages") + ".yml");
+    private final File file = new File("plugins/ChunkClaim/data/messages/" + Config.MESSAGES.getData() + ".yml");
     private YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 
     public void loadValues() {

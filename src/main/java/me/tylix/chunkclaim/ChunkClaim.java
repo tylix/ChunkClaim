@@ -4,15 +4,19 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
+import me.tylix.chunkclaim.commands.ChunkClaimAdminCommand;
 import me.tylix.chunkclaim.commands.ChunkClaimCommand;
 import me.tylix.chunkclaim.config.ConfigManager;
 import me.tylix.chunkclaim.cuboid.Cuboid;
 import me.tylix.chunkclaim.game.LocationManager;
 import me.tylix.chunkclaim.game.chunk.ChunkManager;
+import me.tylix.chunkclaim.game.chunk.biome.BiomeLoader;
 import me.tylix.chunkclaim.game.player.ChunkPlayer;
+import me.tylix.chunkclaim.game.recipes.RecipeLoader;
 import me.tylix.chunkclaim.game.scoreboard.ScoreboardManager;
 import me.tylix.chunkclaim.game.setup.Setup;
 import me.tylix.chunkclaim.listener.*;
+import me.tylix.chunkclaim.message.Message;
 import me.tylix.chunkclaim.message.manager.MessageManager;
 import me.tylix.chunkclaim.module.manager.ModuleManager;
 import org.bukkit.Bukkit;
@@ -40,6 +44,7 @@ public class ChunkClaim extends JavaPlugin {
     private ChunkManager chunkManager;
     private ScoreboardManager scoreboardManager;
     private ModuleManager moduleManager;
+    private RecipeLoader recipeLoader;
 
     private Cuboid spawnCuboid;
 
@@ -52,6 +57,8 @@ public class ChunkClaim extends JavaPlugin {
 
     private void init() {
         System.out.println(" ");
+        Bukkit.getConsoleSender().sendMessage("§8----------------------");
+        System.out.println(" ");
         this.loadPlayers();
 
         configManager = new ConfigManager();
@@ -59,6 +66,7 @@ public class ChunkClaim extends JavaPlugin {
         chunkManager = new ChunkManager();
         scoreboardManager = new ScoreboardManager();
         moduleManager = new ModuleManager();
+        recipeLoader = new RecipeLoader();
 
         configManager.createFileIfNotExists();
         configManager.loadValues();
@@ -72,6 +80,12 @@ public class ChunkClaim extends JavaPlugin {
         System.out.println(" ");
 
         chunkManager.loadChunks();
+
+        recipeLoader.loadRecipes();
+
+        System.out.println(" ");
+        new BiomeLoader();
+        Bukkit.getConsoleSender().sendMessage("§8----------------------");
         System.out.println(" ");
 
         this.registerListener(Bukkit.getPluginManager());
@@ -88,15 +102,16 @@ public class ChunkClaim extends JavaPlugin {
     }
 
     private void loadPlayers() {
-        System.out.println("Loading Players...");
-        if (new File("plugins//ChunkClaim//users").listFiles() != null)
-            for (File file : new File("plugins//ChunkClaim//users").listFiles())
+        System.out.println("Loading players...");
+        if (new File("plugins/ChunkClaim/data/users").listFiles() != null)
+            for (File file : new File("plugins/ChunkClaim/data/users").listFiles())
                 registeredPlayers.add(UUID.fromString(file.getName().replace(".yml", "")));
-        System.out.println("All Players (" + registeredPlayers.size() + ") loaded.");
+        System.out.println("All players (" + registeredPlayers.size() + ") loaded.");
     }
 
     private void registerCommands() {
         this.getCommand("chunkclaim").setExecutor(new ChunkClaimCommand());
+        this.getCommand("chunkclaimadmin").setExecutor(new ChunkClaimAdminCommand());
     }
 
     private void registerListener(PluginManager pluginManager) {
@@ -107,13 +122,23 @@ public class ChunkClaim extends JavaPlugin {
         pluginManager.registerEvents(new ProtectionListener(), this);
     }
 
+    public void reloadPlugin(Player player) {
+        if (player != null)
+            player.sendMessage(Message.PREFIX.getMessage() + " §7Reloading players...");
+        reloadPlayers();
+
+        if (player != null)
+            player.sendMessage(Message.PREFIX.getMessage() + " §7Reloading configs...");
+        messageManager.reload();
+        configManager.reload();
+    }
 
     @Override
     public void onDisable() {
 
     }
 
-    public void reloadPlayers() {
+    private void reloadPlayers() {
         registeredPlayers.clear();
         loadPlayers();
 
@@ -190,5 +215,9 @@ public class ChunkClaim extends JavaPlugin {
 
     public Cuboid getSpawnCuboid() {
         return spawnCuboid;
+    }
+
+    public RecipeLoader getRecipeLoader() {
+        return recipeLoader;
     }
 }
