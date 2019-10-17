@@ -37,11 +37,11 @@ public class ConfigManager {
         for (Config value : Config.values()) {
             if (this.cfg.get(value.name().toLowerCase()) == null) {
                 this.cfg.set(value.name().toLowerCase(), value.getData());
-            }
-            try {
-                this.cfg.save(this.file);
-            } catch (IOException e) {
-                e.printStackTrace();
+                try {
+                    this.cfg.save(this.file);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

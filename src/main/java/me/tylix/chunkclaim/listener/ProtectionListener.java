@@ -5,13 +5,19 @@ import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryMoveItemEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 
 public class ProtectionListener implements Listener {
 
@@ -96,6 +102,33 @@ public class ProtectionListener implements Listener {
                 return;
             }
         }
+    }
+
+    @EventHandler
+    public void handleClick(InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
+
+        if (event.getClickedInventory().getType().equals(InventoryType.PLAYER))
+            event.setCancelled(event.getCurrentItem().equals(ChunkClaim.Items.MENU));
+    }
+
+    @EventHandler
+    public void handleDrop(InventoryMoveItemEvent event) {
+        event.setCancelled(event.getItem().equals(ChunkClaim.Items.MENU));
+    }
+
+    @EventHandler
+    public void handleDrop(PlayerDropItemEvent event) {
+        Player player = event.getPlayer();
+
+        event.setCancelled(event.getItemDrop().getItemStack().equals(ChunkClaim.Items.MENU));
+    }
+
+    @EventHandler
+    public void handleSwap(PlayerSwapHandItemsEvent event) {
+        Player player = event.getPlayer();
+
+        event.setCancelled(event.getMainHandItem().equals(ChunkClaim.Items.MENU) || event.getOffHandItem().equals(ChunkClaim.Items.MENU));
     }
 
 }

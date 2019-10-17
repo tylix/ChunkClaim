@@ -10,14 +10,16 @@ public class PlayerData {
     private int exp;
     private int maxExp;
     private int money;
+    private int menuSlot;
     private String languageFile;
     private List<ChunkData> chunks;
 
-    public PlayerData(int level, int exp, int maxExp, int money, String languageFile, List<ChunkData> chunks) {
+    public PlayerData(int level, int exp, int maxExp, int money, int menuSlot, String languageFile, List<ChunkData> chunks) {
         this.level = level;
         this.exp = exp;
         this.maxExp = maxExp;
         this.money = money;
+        this.menuSlot = menuSlot;
         this.languageFile = languageFile;
         this.chunks = chunks;
     }
@@ -68,5 +70,13 @@ public class PlayerData {
 
     public void setLanguageFile(String languageFile) {
         this.languageFile = languageFile;
+    }
+
+    public int getMenuSlot() {
+        return menuSlot;
+    }
+
+    public void setMenuSlot(int menuSlot) {
+        this.menuSlot = menuSlot;
     }
 }

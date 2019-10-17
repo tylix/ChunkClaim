@@ -43,12 +43,13 @@ public class MessageManager {
             }
         }
         for (Message value : Message.values()) {
-            if (this.cfg.get(value.name().toLowerCase()) == null)
+            if (this.cfg.get(value.name().toLowerCase()) == null) {
                 this.cfg.set(value.name().toLowerCase(), value.getMessageRaw());
-            try {
-                this.cfg.save(this.file);
-            } catch (IOException e) {
-                e.printStackTrace();
+                try {
+                    this.cfg.save(this.file);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

@@ -18,6 +18,7 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.InvalidPluginException;
@@ -29,7 +30,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChunkClaimCommand implements CommandExecutor {
+public class ChunkClaimCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
@@ -148,5 +149,10 @@ public class ChunkClaimCommand implements CommandExecutor {
         } catch (IndexOutOfBoundsException e) {
             player.sendMessage(Message.PAGE_NOT_EXISTS.getMessage());
         }
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
+        return null;
     }
 }

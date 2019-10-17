@@ -1,20 +1,14 @@
 package me.tylix.chunkclaim.listener;
 
-import com.google.gson.Gson;
 import me.tylix.chunkclaim.ChunkClaim;
 import me.tylix.chunkclaim.game.LocationManager;
 import me.tylix.chunkclaim.game.player.ChunkPlayer;
-import me.tylix.chunkclaim.game.scoreboard.ScoreboardManager;
-import me.tylix.chunkclaim.message.HelpPage;
 import me.tylix.chunkclaim.message.Message;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-
-import java.util.List;
 
 public class PlayerJoinEventListener implements Listener {
 
@@ -37,6 +31,7 @@ public class PlayerJoinEventListener implements Listener {
             player.sendMessage(" ");
         }
 
+        ChunkClaim.INSTANCE.getChunkPlayer(player).setItem();
 
         event.setJoinMessage(Message.PLAYER_JOIN.getMessage(player));
 

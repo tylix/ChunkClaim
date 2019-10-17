@@ -5,7 +5,10 @@ import me.tylix.chunkclaim.config.Config;
 import me.tylix.chunkclaim.config.JsonConfig;
 import me.tylix.chunkclaim.game.player.data.PlayerData;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -45,7 +48,7 @@ public class ChunkPlayer {
         if (exists()) return true;
         new File("plugins/ChunkClaim/data").mkdirs();
         new File("plugins/ChunkClaim/data/users").mkdirs();
-        final PlayerData playerData = new PlayerData(0, 0, 100, 500, Config.MESSAGES.getData().toString(), new ArrayList<>());
+        final PlayerData playerData = new PlayerData(0, 0, 100, 500, 8, Config.MESSAGES.getData().toString(), new ArrayList<>());
 
         final JsonConfig jsonConfig = new JsonConfig(this.file);
         jsonConfig.set("userData", playerData);
@@ -58,6 +61,18 @@ public class ChunkPlayer {
         setChunkSize(playerData.getChunks().size());
 
         return false;
+    }
+
+    public void setItem() {
+        Player player = Bukkit.getPlayer(uuid);
+
+        if (player.getInventory().getItem(playerData.getMenuSlot()) != null && !player.getInventory().getItem(playerData.getMenuSlot()).getType().equals(ChunkClaim.Items.MENU.getType())) {
+            ItemStack itemStack = player.getInventory().getItem(playerData.getMenuSlot());
+            player.getInventory().setItem(playerData.getMenuSlot(), null);
+            player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
+        }
+
+        player.getInventory().setItem(playerData.getMenuSlot(), ChunkClaim.Items.MENU);
     }
 
     public PlayerData getPlayerData() {

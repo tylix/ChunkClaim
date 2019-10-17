@@ -11,6 +11,8 @@ import me.tylix.chunkclaim.cuboid.Cuboid;
 import me.tylix.chunkclaim.game.LocationManager;
 import me.tylix.chunkclaim.game.chunk.ChunkManager;
 import me.tylix.chunkclaim.game.chunk.biome.BiomeLoader;
+import me.tylix.chunkclaim.game.deathcause.DeathCauseLoader;
+import me.tylix.chunkclaim.game.item.ItemBuilder;
 import me.tylix.chunkclaim.game.player.ChunkPlayer;
 import me.tylix.chunkclaim.game.recipes.RecipeLoader;
 import me.tylix.chunkclaim.game.scoreboard.ScoreboardManager;
@@ -20,7 +22,10 @@ import me.tylix.chunkclaim.message.Message;
 import me.tylix.chunkclaim.message.manager.MessageManager;
 import me.tylix.chunkclaim.module.manager.ModuleManager;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -35,6 +40,8 @@ public class ChunkClaim extends JavaPlugin {
     private final List<UUID> registeredPlayers = new ArrayList<>();
     private final Map<UUID, Setup> setupMap = new HashMap<>();
 
+
+
     private final Gson gson = new Gson(),
             prettyGson = new GsonBuilder().setPrettyPrinting().create();
     private final JsonParser parser = new JsonParser();
@@ -45,6 +52,7 @@ public class ChunkClaim extends JavaPlugin {
     private ScoreboardManager scoreboardManager;
     private ModuleManager moduleManager;
     private RecipeLoader recipeLoader;
+    private DeathCauseLoader deathCauseLoader;
 
     private Cuboid spawnCuboid;
 
@@ -67,6 +75,7 @@ public class ChunkClaim extends JavaPlugin {
         scoreboardManager = new ScoreboardManager();
         moduleManager = new ModuleManager();
         recipeLoader = new RecipeLoader();
+        deathCauseLoader = new DeathCauseLoader();
 
         configManager.createFileIfNotExists();
         configManager.loadValues();
@@ -82,6 +91,7 @@ public class ChunkClaim extends JavaPlugin {
         chunkManager.loadChunks();
 
         recipeLoader.loadRecipes();
+        deathCauseLoader.loadDeathCauses();
 
         System.out.println(" ");
         new BiomeLoader();
@@ -90,6 +100,8 @@ public class ChunkClaim extends JavaPlugin {
 
         this.registerListener(Bukkit.getPluginManager());
         this.registerCommands();
+
+        new Items();
 
         loadSpawnArea();
     }
@@ -111,10 +123,12 @@ public class ChunkClaim extends JavaPlugin {
 
     private void registerCommands() {
         this.getCommand("chunkclaim").setExecutor(new ChunkClaimCommand());
+        this.getCommand("chunkclaim").setTabCompleter(new ChunkClaimCommand());
         this.getCommand("chunkclaimadmin").setExecutor(new ChunkClaimAdminCommand());
     }
 
     private void registerListener(PluginManager pluginManager) {
+        pluginManager.registerEvents(new PlayerDeathEventListener(), this);
         pluginManager.registerEvents(new PlayerChatEventListener(), this);
         pluginManager.registerEvents(new PlayerJoinEventListener(), this);
         pluginManager.registerEvents(new PlayerQuitEventListener(), this);
@@ -219,5 +233,13 @@ public class ChunkClaim extends JavaPlugin {
 
     public RecipeLoader getRecipeLoader() {
         return recipeLoader;
+    }
+
+    public DeathCauseLoader getDeathCauseLoader() {
+        return deathCauseLoader;
+    }
+
+    public static class Items {
+        public static final ItemStack MENU = new ItemBuilder(Material.BLAZE_POWDER).setDisplayName(Message.MENU_ITEM_NAME.getMessage()).build();
     }
 }
