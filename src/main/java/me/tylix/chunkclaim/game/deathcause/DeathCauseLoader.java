@@ -43,6 +43,11 @@ public class DeathCauseLoader {
         }
     }
 
+    public void reload() {
+        dataList.clear();
+        loadDeathCauses();
+    }
+
     public DeathCauseData getData(EntityDamageEvent.DamageCause damageCause) {
         for (DeathCauseData data : dataList)
             if (data.getDamageCause().equals(damageCause))

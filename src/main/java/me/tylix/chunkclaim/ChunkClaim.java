@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
+import me.tylix.chunkclaim.actionbar.ActionbarManager;
+import me.tylix.chunkclaim.commands.BackCommand;
 import me.tylix.chunkclaim.commands.ChunkClaimAdminCommand;
 import me.tylix.chunkclaim.commands.ChunkClaimCommand;
 import me.tylix.chunkclaim.config.ConfigManager;
@@ -21,10 +23,17 @@ import me.tylix.chunkclaim.listener.*;
 import me.tylix.chunkclaim.message.Message;
 import me.tylix.chunkclaim.message.manager.MessageManager;
 import me.tylix.chunkclaim.module.manager.ModuleManager;
+import me.tylix.chunkclaim.update.UpdateChecker;
+import net.minecraft.server.v1_14_R1.Blocks;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -39,7 +48,6 @@ public class ChunkClaim extends JavaPlugin {
     private final List<ChunkPlayer> players = new ArrayList<>();
     private final List<UUID> registeredPlayers = new ArrayList<>();
     private final Map<UUID, Setup> setupMap = new HashMap<>();
-
 
 
     private final Gson gson = new Gson(),
@@ -94,7 +102,25 @@ public class ChunkClaim extends JavaPlugin {
         deathCauseLoader.loadDeathCauses();
 
         System.out.println(" ");
+
+        UpdateChecker.of(this).resourceId(72110).handleResponse((versionResponse, s) -> {
+            switch (versionResponse) {
+                case FOUND_NEW:
+                    Bukkit.broadcastMessage("New version of the plugin was found: " + s);
+                    break;
+                case LATEST:
+                    Bukkit.broadcastMessage("You are on the latest version of the plugin.");
+                    break;
+                case UNAVAILABLE:
+                    System.out.println("Unable to perform an update check.");
+                    break;
+            }
+        }).check();
+
+        System.out.println(" ");
+
         new BiomeLoader();
+
         Bukkit.getConsoleSender().sendMessage("§8----------------------");
         System.out.println(" ");
 
@@ -103,7 +129,30 @@ public class ChunkClaim extends JavaPlugin {
 
         new Items();
 
+        // startChecker();
+
         loadSpawnArea();
+    }
+
+    private void startChecker() {
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
+            /*for (Entity world : Bukkit.getWorld("world").getEntities()) {
+                if (world instanceof Arrow) {
+                    if (world.getFireTicks() != 0) {
+                        int random = new Random().nextInt(4);
+                        int percentage = new Random().nextInt(100);
+                        if (percentage <= 30) {
+                            world.getLocation().add(random, random, random).getBlock().setType(Material.FIRE);
+                            world.remove();
+                        }
+                    }
+                }
+            }*/
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                boolean inside = false;
+                new ActionbarManager(onlinePlayer.getUniqueId()).sendActionbar(inside ? "inside" : "outside");
+            }
+        }, 5, 5);
     }
 
     public void loadSpawnArea() {
@@ -122,6 +171,7 @@ public class ChunkClaim extends JavaPlugin {
     }
 
     private void registerCommands() {
+        this.getCommand("back").setExecutor(new BackCommand());
         this.getCommand("chunkclaim").setExecutor(new ChunkClaimCommand());
         this.getCommand("chunkclaim").setTabCompleter(new ChunkClaimCommand());
         this.getCommand("chunkclaimadmin").setExecutor(new ChunkClaimAdminCommand());
@@ -145,11 +195,51 @@ public class ChunkClaim extends JavaPlugin {
             player.sendMessage(Message.PREFIX.getMessage() + " §7Reloading configs...");
         messageManager.reload();
         configManager.reload();
+        deathCauseLoader.reload();
+        recipeLoader.reload();
     }
 
     @Override
     public void onDisable() {
 
+    }
+
+    public ItemStack getPlaceholder() {
+        return new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+    }
+
+    public Inventory fillInventory(Inventory inventory, ItemStack placeHolder) {
+        for (int i = 0; i < inventory.getSize(); i++)
+            inventory.setItem(i, placeHolder);
+        return inventory;
+    }
+
+    public Inventory fillCycle(Inventory inventory, ItemStack placeHolder) {
+        for (int i = 0; i < 9; ++i)
+            if (inventory.getItem(i) == null)
+                inventory.setItem(i, placeHolder);
+        for (int i = inventory.getSize() - 9; i < inventory.getSize(); ++i)
+            if (inventory.getItem(i) == null)
+                inventory.setItem(i, placeHolder);
+        int j = 0;
+        for (int i = 0; i < inventory.getSize() / 9; ++i) {
+            if (i != 0 && i != inventory.getSize() - 9)
+                inventory.setItem(j, placeHolder);
+            j += 9;
+        }
+        int k = 8;
+        for (int i = 0; i < inventory.getSize() / 9; ++i) {
+            if (i != 0 && i != inventory.getSize() - 9)
+                inventory.setItem(k, placeHolder);
+            k += 9;
+        }
+        return inventory;
+    }
+
+    public Inventory fillInventory(Inventory inventory, ItemStack placeHolder, int... slots) {
+        for (int slot : slots)
+            inventory.setItem(slot, placeHolder);
+        return inventory;
     }
 
     private void reloadPlayers() {
@@ -238,6 +328,7 @@ public class ChunkClaim extends JavaPlugin {
     public DeathCauseLoader getDeathCauseLoader() {
         return deathCauseLoader;
     }
+
 
     public static class Items {
         public static final ItemStack MENU = new ItemBuilder(Material.BLAZE_POWDER).setDisplayName(Message.MENU_ITEM_NAME.getMessage()).build();

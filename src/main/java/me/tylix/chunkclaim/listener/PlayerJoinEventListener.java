@@ -31,7 +31,7 @@ public class PlayerJoinEventListener implements Listener {
             player.sendMessage(" ");
         }
 
-        ChunkClaim.INSTANCE.getChunkPlayer(player).setItem();
+        // ChunkClaim.INSTANCE.getChunkPlayer(player).setItem();
 
         event.setJoinMessage(Message.PLAYER_JOIN.getMessage(player));
 

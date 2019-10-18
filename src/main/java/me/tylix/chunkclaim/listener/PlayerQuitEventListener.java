@@ -16,6 +16,7 @@ public class PlayerQuitEventListener implements Listener {
         Player player = event.getPlayer();
 
         ChunkClaim.INSTANCE.getPlayers().remove(ChunkClaim.INSTANCE.getChunkPlayer(player));
+        PlayerDeathEventListener.LOCATION_MAP.remove(player.getUniqueId());
 
         event.setQuitMessage(Message.PLAYER_QUIT.getMessage(player));
     }

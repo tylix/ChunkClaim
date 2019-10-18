@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 
 public enum Config {
 
-    MESSAGES("messages_DE_de"),
+    MESSAGES("messages_en_US"),
     CHUNK_WORLD("world"),
     CHUNK_PRICE(500),
     CHUNK_CALCULATION("$chunk_price$ * ($chunk_size$ * 2)"),

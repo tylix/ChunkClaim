@@ -13,7 +13,7 @@ public class ChunkClaimAdminCommand implements CommandExecutor {
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         Player player = (Player) commandSender;
 
-        if (!player.hasPermission("verany.admin")) {
+        if (!player.hasPermission("chunkclaim.admin")) {
             ChunkClaimCommand.sendHelp(player, 1);
             return false;
         }

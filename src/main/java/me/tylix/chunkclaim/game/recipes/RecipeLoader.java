@@ -61,6 +61,13 @@ public class RecipeLoader {
         }
     }
 
+    public void reload() {
+        Bukkit.resetRecipes();
+
+        recipeData.clear();
+        loadRecipes();
+    }
+
     public List<RecipeData> getRecipeData() {
         return recipeData;
     }

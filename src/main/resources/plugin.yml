@@ -1,5 +1,5 @@
 name: ChunkClaim
-version: 0.1
+version: 0.1 Beta
 author: tylix
 main: me.tylix.chunkclaim.ChunkClaim
 commands:
@@ -11,4 +11,5 @@ commands:
     aliases:
       - cca
       - chunka
+  back:
 api-version: 1.13
