@@ -22,16 +22,18 @@ public class RecipeLoader {
     private final File file;
     private final YamlConfiguration cfg;
 
-    private final List<RecipeData> recipeData = new ArrayList<>();
+    private final List<RecipeData> recipeData;
 
     public RecipeLoader() {
+        recipeData = new ArrayList<>();
+
         this.file = new File("plugins/ChunkClaim/data/recipes.yml");
         this.cfg = YamlConfiguration.loadConfiguration(file);
     }
 
     public void loadRecipes() {
         if (cfg.getStringList("Recipes").isEmpty()) {
-            final List<String> recipes = new ArrayList<>(Lists.newArrayList(ChunkClaim.INSTANCE.getPrettyGson().toJson(new Gson().toJsonTree(new RecipeData("test0", "§aTest", Material.STONE, true, new Description(" A ", "AAA", " A ").getDescription(), new IngredientData[]{new IngredientData('A', Material.COBBLESTONE)}, null))), ChunkClaim.INSTANCE.getPrettyGson().toJson(new Gson().toJsonTree(new RecipeData("test1", "§bTest", Material.COBBLESTONE, false, new Description(" A ", "AAA", " A ").getDescription(), null, new ShapelessIngredientData(Material.STONE,  2))))));
+            final List<String> recipes = new ArrayList<>(Lists.newArrayList(ChunkClaim.INSTANCE.getPrettyGson().toJson(new Gson().toJsonTree(new RecipeData("test0", "§aTest", Material.STONE, true, new Description(" A ", "AAA", " A ").getDescription(), new IngredientData[]{new IngredientData('A', Material.COBBLESTONE)}, null))), ChunkClaim.INSTANCE.getPrettyGson().toJson(new Gson().toJsonTree(new RecipeData("test1", "§bTest", Material.COBBLESTONE, false, new Description(" A ", "AAA", " A ").getDescription(), null, new ShapelessIngredientData(Material.STONE, 2))))));
             cfg.set("Recipes", recipes);
             try {
                 cfg.save(file);

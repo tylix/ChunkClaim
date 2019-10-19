@@ -12,4 +12,5 @@ commands:
       - cca
       - chunka
   back:
+  home:
 api-version: 1.13

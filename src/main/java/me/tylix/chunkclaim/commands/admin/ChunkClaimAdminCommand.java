@@ -1,6 +1,7 @@
-package me.tylix.chunkclaim.commands;
+package me.tylix.chunkclaim.commands.admin;
 
 import me.tylix.chunkclaim.ChunkClaim;
+import me.tylix.chunkclaim.commands.chunk.ChunkClaimCommand;
 import me.tylix.chunkclaim.game.setup.Setup;
 import me.tylix.chunkclaim.message.Message;
 import org.bukkit.command.Command;
@@ -43,10 +44,28 @@ public class ChunkClaimAdminCommand implements CommandExecutor {
                             player.sendMessage(Message.PREFIX.getMessage() + " §4Reloading failed!");
                     }
 
+                } else if (strings[0].equalsIgnoreCase("reset")) {
+                    player.sendMessage(Message.PREFIX.getMessageRaw() + " §7Are you sure to reset all messages?");
+                    player.sendMessage(Message.PREFIX.getMessageRaw() + " §a/cca reset confirm");
                 }
                 break;
             case 2:
-
+                if (strings[0].equalsIgnoreCase("reset") && strings[1].equalsIgnoreCase("confirm")) {
+                    boolean success = true;
+                    try {
+                        player.sendMessage(Message.PREFIX.getMessageRaw() + " §7Reset messages...");
+                        ChunkClaim.INSTANCE.getMessageManager().reset();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        player.sendMessage(Message.PREFIX.getMessageRaw() + " §cAn error occurred while reset messages (check console/logs for more info)! [" + e.toString() + "]");
+                        success = false;
+                    } finally {
+                        if (success)
+                            player.sendMessage(Message.PREFIX.getMessage() + " §2Reset successfully");
+                        else
+                            player.sendMessage(Message.PREFIX.getMessage() + " §4Reset failed!");
+                    }
+                }
                 break;
             default:
                 sendHelp(player,  1);
@@ -69,6 +88,7 @@ public class ChunkClaimAdminCommand implements CommandExecutor {
                     Message.PREFIX.getMessage() + " §7Useful Admin-Commands§8:\n" +
                     " \n" +
                     "§8» §e/cca reload§8- §7Reloading config\n" +
+                    "§8» §e/cca reset§8- §7Reset Config to default (en_US)\n" +
                     "§8» §e/cca setup §8- §7Start the Setup\n" +
                     " ";
         }

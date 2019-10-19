@@ -3,18 +3,20 @@ package me.tylix.chunkclaim;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonReader;
 import me.tylix.chunkclaim.actionbar.ActionbarManager;
-import me.tylix.chunkclaim.commands.BackCommand;
-import me.tylix.chunkclaim.commands.ChunkClaimAdminCommand;
-import me.tylix.chunkclaim.commands.ChunkClaimCommand;
+import me.tylix.chunkclaim.commands.death.BackCommand;
+import me.tylix.chunkclaim.commands.admin.ChunkClaimAdminCommand;
+import me.tylix.chunkclaim.commands.chunk.ChunkClaimCommand;
+import me.tylix.chunkclaim.commands.home.HomeCommand;
 import me.tylix.chunkclaim.config.ConfigManager;
 import me.tylix.chunkclaim.cuboid.Cuboid;
 import me.tylix.chunkclaim.game.LocationManager;
+import me.tylix.chunkclaim.game.achievements.manager.AchievementLoader;
 import me.tylix.chunkclaim.game.chunk.ChunkManager;
 import me.tylix.chunkclaim.game.chunk.biome.BiomeLoader;
 import me.tylix.chunkclaim.game.deathcause.DeathCauseLoader;
 import me.tylix.chunkclaim.game.item.ItemBuilder;
+import me.tylix.chunkclaim.game.item.SkullBuilder;
 import me.tylix.chunkclaim.game.player.ChunkPlayer;
 import me.tylix.chunkclaim.game.recipes.RecipeLoader;
 import me.tylix.chunkclaim.game.scoreboard.ScoreboardManager;
@@ -24,14 +26,8 @@ import me.tylix.chunkclaim.message.Message;
 import me.tylix.chunkclaim.message.manager.MessageManager;
 import me.tylix.chunkclaim.module.manager.ModuleManager;
 import me.tylix.chunkclaim.update.UpdateChecker;
-import net.minecraft.server.v1_14_R1.Blocks;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.command.TabCompleter;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -97,6 +93,8 @@ public class ChunkClaim extends JavaPlugin {
         System.out.println(" ");
 
         chunkManager.loadChunks();
+
+        new AchievementLoader().loadAchievements();
 
         recipeLoader.loadRecipes();
         deathCauseLoader.loadDeathCauses();
@@ -171,6 +169,8 @@ public class ChunkClaim extends JavaPlugin {
     }
 
     private void registerCommands() {
+        this.getCommand("home").setExecutor(new HomeCommand());
+        this.getCommand("home").setTabCompleter(new HomeCommand());
         this.getCommand("back").setExecutor(new BackCommand());
         this.getCommand("chunkclaim").setExecutor(new ChunkClaimCommand());
         this.getCommand("chunkclaim").setTabCompleter(new ChunkClaimCommand());
@@ -332,5 +332,6 @@ public class ChunkClaim extends JavaPlugin {
 
     public static class Items {
         public static final ItemStack MENU = new ItemBuilder(Material.BLAZE_POWDER).setDisplayName(Message.MENU_ITEM_NAME.getMessage()).build();
+        public static final SkullBuilder MONEY_SKULL = new SkullBuilder("{display:{Name:\\\"Gold Block\\\"},SkullOwner:{Id:\\\"fdea850d-ae8b-4e10-8b03-6883494ae266\\\",Properties:{textures:[{Value:\\\"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTRiZjg5M2ZjNmRlZmFkMjE4Zjc4MzZlZmVmYmU2MzZmMWMyY2MxYmI2NTBjODJmY2NkOTlmMmMxZWU2In19fQ==\\\"}]}}}", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTRiZjg5M2ZjNmRlZmFkMjE4Zjc4MzZlZmVmYmU2MzZmMWMyY2MxYmI2NTBjODJmY2NkOTlmMmMxZWU2In19fQ");
     }
 }

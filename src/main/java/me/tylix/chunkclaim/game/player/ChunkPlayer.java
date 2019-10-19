@@ -3,9 +3,9 @@ package me.tylix.chunkclaim.game.player;
 import me.tylix.chunkclaim.ChunkClaim;
 import me.tylix.chunkclaim.config.Config;
 import me.tylix.chunkclaim.config.JsonConfig;
+import me.tylix.chunkclaim.game.home.HomeObject;
 import me.tylix.chunkclaim.game.player.data.PlayerData;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -23,6 +23,8 @@ public class ChunkPlayer {
     private final File file;
     private final YamlConfiguration cfg;
 
+    private HomeObject homeObject;
+
     private int chunkSize = 0;
 
     private PlayerData playerData;
@@ -35,6 +37,12 @@ public class ChunkPlayer {
         if (exists()) {
             final JsonConfig jsonConfig = new JsonConfig(this.file);
             playerData = jsonConfig.get("userData", PlayerData.class);
+            homeObject = new HomeObject(uuid);
+
+            if (playerData.getHomes() == null) {
+                playerData.setHomes(new ArrayList<>());
+                updatePlayerData(playerData);
+            }
 
             setChunkSize(playerData.getChunks().size());
         }
@@ -48,7 +56,7 @@ public class ChunkPlayer {
         if (exists()) return true;
         new File("plugins/ChunkClaim/data").mkdirs();
         new File("plugins/ChunkClaim/data/users").mkdirs();
-        final PlayerData playerData = new PlayerData(0, 0, 100, 500, 8, Config.MESSAGES.getData().toString(), new ArrayList<>());
+        final PlayerData playerData = new PlayerData(0, 0, 100, 500, 8, Config.MESSAGES.getData().toString(), new ArrayList<>(), new ArrayList<>());
 
         final JsonConfig jsonConfig = new JsonConfig(this.file);
         jsonConfig.set("userData", playerData);
@@ -57,6 +65,7 @@ public class ChunkPlayer {
         ChunkClaim.INSTANCE.getRegisteredPlayers().add(uuid);
 
         this.playerData = jsonConfig.get("userData", PlayerData.class);
+        this.homeObject = new HomeObject(uuid);
 
         setChunkSize(playerData.getChunks().size());
 
@@ -112,6 +121,10 @@ public class ChunkPlayer {
             price = (int) engine.eval(calculation);
         }
         return price;
+    }
+
+    public HomeObject getHomeObject() {
+        return new HomeObject(uuid);
     }
 
     public File getFile() {

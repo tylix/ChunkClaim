@@ -35,7 +35,7 @@ public class MessageManager {
     public void createFileIfNotExists() {
         if (!this.file.exists()) {
             for (Message value : Message.values())
-                this.cfg.set(value.name().toLowerCase(), value.getMessageRaw());
+                this.cfg.set(value.name().toLowerCase(), value.getDefaultMessage());
             try {
                 this.cfg.save(this.file);
             } catch (IOException e) {
@@ -51,6 +51,18 @@ public class MessageManager {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    public void reset() {
+        for (Message value : Message.values()) {
+            this.cfg.set(value.name().toLowerCase(), value.getDefaultMessage());
+            value.setMessage(value.getDefaultMessage());
+        }
+        try {
+            this.cfg.save(this.file);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

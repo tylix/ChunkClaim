@@ -1,4 +1,4 @@
-package me.tylix.chunkclaim.commands;
+package me.tylix.chunkclaim.commands.chunk;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -15,6 +15,7 @@ import me.tylix.chunkclaim.message.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -29,6 +30,7 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class ChunkClaimCommand implements CommandExecutor, TabCompleter {
 
@@ -94,12 +96,15 @@ public class ChunkClaimCommand implements CommandExecutor, TabCompleter {
                         e.printStackTrace();
                     }
                     return false;
-                } else if (strings[0].equalsIgnoreCase("map")) {
+                }/* else if (strings[0].equalsIgnoreCase("map")) {
                     player.sendMessage(" ");
                     player.sendMessage(ChunkClaim.INSTANCE.getChunkManager().getChunkMap(player.getLocation()));
                     player.sendMessage(" ");
 
                     player.sendMessage(new Gson().toJson(BiomeLoader.BIOMES));
+                    return false;
+                }*/ else if (strings[0].equalsIgnoreCase("random")) {
+                    player.teleport(getRandomLocation());
                     return false;
                 } else {
                     sendHelp(player, 1);
@@ -139,13 +144,40 @@ public class ChunkClaimCommand implements CommandExecutor, TabCompleter {
         return false;
     }
 
+    private Location getRandomLocation() {
+        final Random random = new Random();
+        final int x = -5000 + random.nextInt(10000);
+        final int z = -5000 + random.nextInt(10000);
+
+        final Location location = new Location(Bukkit.getWorld("world"), x, 0, z);
+        location.getWorld().refreshChunk(location.getBlockX(), location.getBlockZ());
+        location.getWorld().loadChunk(location.getChunk());
+        int y = 0;
+        while (!location.getBlock().getType().equals(Material.AIR)) {
+            y++;
+            location.setY(y);
+
+            final Location newLocation = location.clone();
+            newLocation.setY(y);
+            if (newLocation.getBlock().getType().equals(Material.AIR))
+                break;
+        }
+        location.setY(y);
+
+        if (!location.clone().subtract(0, 1, 0).getBlock().getType().isSolid())
+            return getRandomLocation();
+        return location;
+    }
+
     public static void sendHelp(final Player player, int page) {
         page = page - 1;
 
         final List<String> helpPages = (List<String>) Message.HELP_PAGES.getMessageRaw();
         try {
-            for (String s : new Gson().fromJson(helpPages.get(page), HelpPage.class).getHelp())
+            for (String s : new Gson().fromJson(helpPages.get(page), HelpPage.class).getHelp()) {
+                s = s.replace("$prefix$", (String) Message.PREFIX.getMessageRaw()).replace("$page$", String.valueOf((page + 1))).replace("$max_pages$", String.valueOf(helpPages.size()));
                 player.sendMessage(s);
+            }
         } catch (IndexOutOfBoundsException e) {
             player.sendMessage(Message.PAGE_NOT_EXISTS.getMessage());
         }

@@ -1,6 +1,7 @@
 package me.tylix.chunkclaim.game.player.data;
 
 import me.tylix.chunkclaim.game.chunk.data.ChunkData;
+import me.tylix.chunkclaim.game.home.data.HomeData;
 
 import java.util.List;
 
@@ -12,15 +13,17 @@ public class PlayerData {
     private int money;
     private int menuSlot;
     private String languageFile;
+    private List<HomeData> homes;
     private List<ChunkData> chunks;
 
-    public PlayerData(int level, int exp, int maxExp, int money, int menuSlot, String languageFile, List<ChunkData> chunks) {
+    public PlayerData(int level, int exp, int maxExp, int money, int menuSlot, String languageFile, List<HomeData> homes, List<ChunkData> chunks) {
         this.level = level;
         this.exp = exp;
         this.maxExp = maxExp;
         this.money = money;
         this.menuSlot = menuSlot;
         this.languageFile = languageFile;
+        this.homes = homes;
         this.chunks = chunks;
     }
 
@@ -78,5 +81,13 @@ public class PlayerData {
 
     public void setMenuSlot(int menuSlot) {
         this.menuSlot = menuSlot;
+    }
+
+    public List<HomeData> getHomes() {
+        return homes;
+    }
+
+    public void setHomes(List<HomeData> homes) {
+        this.homes = homes;
     }
 }

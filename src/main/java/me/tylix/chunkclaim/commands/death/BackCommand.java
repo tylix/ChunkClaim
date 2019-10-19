@@ -1,4 +1,4 @@
-package me.tylix.chunkclaim.commands;
+package me.tylix.chunkclaim.commands.death;
 
 import me.tylix.chunkclaim.listener.PlayerDeathEventListener;
 import org.bukkit.Sound;
