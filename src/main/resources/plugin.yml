@@ -1,5 +1,5 @@
 name: SimpleSurvival
-version: 0.2 Beta
+version: 0.3 Beta
 author: tylix
 main: me.tylix.simplesurvival.SimpleSurvival
 commands:

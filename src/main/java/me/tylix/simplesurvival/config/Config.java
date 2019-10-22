@@ -3,6 +3,7 @@ package me.tylix.simplesurvival.config;
 public enum Config {
 
     MESSAGES("messages_en_US"),
+    AUTO_UPDATE(false),
     CHUNK_WORLD("world"),
     CHUNK_PRICE(500),
     CHUNK_CALCULATION("$chunk_price$ * ($chunk_size$ * 2)"),
