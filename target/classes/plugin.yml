@@ -1,0 +1,19 @@
+name: SimpleSurvival
+version: 0.3 Beta
+author: tylix
+main: me.tylix.simplesurvival.SimpleSurvival
+commands:
+  chunkclaim:
+    aliases:
+      - cc
+      - chunk
+  chunkclaimadmin:
+    aliases:
+      - cca
+      - chunka
+  back:
+  home:
+  warp:
+    aliases:
+      - warps
+api-version: 1.13
