@@ -28,6 +28,7 @@ public class ChunkPlayer {
     private int chunkSize = 0;
 
     private PlayerData playerData;
+    private boolean warpInventoryOpen = false;
 
     public ChunkPlayer(UUID uuid) {
         this.uuid = uuid;
@@ -145,5 +146,13 @@ public class ChunkPlayer {
 
     public void setChunkSize(int chunkSize) {
         this.chunkSize = chunkSize;
+    }
+
+    public boolean isWarpInventoryOpen() {
+        return warpInventoryOpen;
+    }
+
+    public void setWarpInventoryOpen(boolean warpInventoryOpen) {
+        this.warpInventoryOpen = warpInventoryOpen;
     }
 }

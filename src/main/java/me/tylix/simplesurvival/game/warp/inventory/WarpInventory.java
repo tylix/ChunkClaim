@@ -3,13 +3,13 @@ package me.tylix.simplesurvival.game.warp.inventory;
 import me.tylix.simplesurvival.SimpleSurvival;
 import me.tylix.simplesurvival.game.item.ItemBuilder;
 import me.tylix.simplesurvival.game.warp.data.WarpData;
+import me.tylix.simplesurvival.message.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class WarpInventory {
 
@@ -23,7 +23,9 @@ public class WarpInventory {
     }
 
     public WarpInventory setItems(final int page) {
-        this.inventory = Bukkit.createInventory(null, 9 * 6, "§7All Warps §8(§3" + instance.getWarpManager().getWarps().size() + "§8): §8[§bPage " + page + "§8]");
+        if (!instance.getChunkPlayer(uuid).isWarpInventoryOpen())
+            instance.getChunkPlayer(uuid).setWarpInventoryOpen(true);
+        this.inventory = Bukkit.createInventory(null, 9 * 6, Message.WARP_INVENTORY_NAME.getMessage().replace("$page$", String.valueOf(page)).replace("$warp_size$", String.valueOf(instance.getWarpManager().getWarps().size())));
 
         for (int i = 0; i < 9; ++i) {
             if (inventory.getItem(i) == null) {
@@ -65,8 +67,9 @@ public class WarpInventory {
             inventory.setItem(36, new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setNoName().build());
         }
 
+
         for (WarpData warp : warps)
-            inventory.addItem(new ItemBuilder(warp.getItemStack()).setDisplayName("§b" + warp.getName()).addLoreArray(new String[]{" ", " §8» §7Click to teleport"}).build());
+            inventory.addItem(new ItemBuilder(warp.getMaterial()).setDisplayName(Message.WARP_ITEM_NAME.getMessage().replace("$warp_name$", warp.getName())).addLoreAll((List<String>) Message.WARP_ITEM_LORE.getMessageRaw()).build());
 
         return this;
     }

@@ -55,7 +55,6 @@ public class ChunkManager {
         return false;
     }
 
-
     public boolean isFree(final Chunk chunk) {
         final ChunkLocation maxLocation = new ChunkLocation(this.getMaxLocation(chunk));
         final ChunkLocation minLocation = new ChunkLocation(this.getMinLocation(chunk));

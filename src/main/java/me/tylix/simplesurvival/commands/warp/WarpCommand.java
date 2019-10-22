@@ -58,7 +58,7 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                     player.sendMessage(Message.PREFIX.getMessageRaw() + " §cThere is already a warp with this name!");
                     return false;
                 }
-                instance.getWarpManager().addWarp(new WarpData(strings[1], new ItemStack(Material.GRASS_BLOCK), new ChunkLocation(player.getLocation())));
+                instance.getWarpManager().addWarp(new WarpData(strings[1], Material.GRASS_BLOCK, new ChunkLocation(player.getLocation())));
                 player.sendMessage(Message.PREFIX.getMessageRaw() + " §7You §asuccessfully added §7a Warp called §b\"" + strings[1] + "\"§8!");
             } else if (strings[0].equalsIgnoreCase("delete")) {
                 if (!player.hasPermission("simplesurvival.admin")) {

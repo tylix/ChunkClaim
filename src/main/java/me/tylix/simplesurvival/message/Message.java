@@ -7,6 +7,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public enum Message {
 
@@ -28,12 +30,19 @@ public enum Message {
     CHUNK_INFO_CLAIMED("", ""),
     CHUNK_INFO_FREE("", ""),
     HOME_SET_SUCCESSFULLY("$prefix$ §7You §asuccessfully §7set a home called §b{0}§7!", ""),
+    HOME_REMOVE_SUCCESSFULLY("§7You §asuccessfully §7removed a home called §b{0}§8.", ""),
     HOME_MAX("$prefix$ §cYou can only set {0} homes!", ""),
     HOME_ALREADY_EXISTS("$prefix$ §cYou already own a home with this name!", ""),
     HOME_DO_NOT_EXISTS("$prefix$ §cYou don't have a home with this name!", ""),
     HOMES_LEFT("$prefix$ §7You have §a{0} §7home(s) left.", ""),
+    HOME_LIST_FORMAT("   §8- §e{0}", ""),
+    HOME_CLICK_TO_TELEPORT("§7Click to teleport to home §a{0}", ""),
     NO_HOMES("$prefix$ §cYou currently have no homes!", ""),
+    YOUR_HOMES("$prefix$ §7Your homes §8(§a{0}§8):", ""),
     WARP_DO_NOT_EXISTS("$prefix$ §cThere is no warp with this name!", ""),
+    WARP_INVENTORY_NAME("§7All Warps §8(§3$warp_size$§8): §8[§b$page$§8]", ""),
+    WARP_ITEM_NAME("§b$warp_name$", ""),
+    WARP_ITEM_LORE(Lists.newArrayList(" ", "§7Click to teleport"), new ArrayList<>()),
     MENU_ITEM_NAME("§2SimpleSurvival Menu", ""),
     MENU_INVENTORY_NAME("§2SimpleSurvival Menu", ""),
     SCOREBOARD_ENABLED(true, ""),
@@ -99,7 +108,6 @@ public enum Message {
     }
 
     public String getMessage(final Player player) {
-
         return ((String) message).replace("&", "§").replace("$prefix$", PREFIX.getMessage()).replace("$player$", player.getName()).replace("$online$", String.valueOf(SimpleSurvival.INSTANCE.getPlayers().size())).replace("$max$", String.valueOf(Bukkit.getMaxPlayers()));
     }
 

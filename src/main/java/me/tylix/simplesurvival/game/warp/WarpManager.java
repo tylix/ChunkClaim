@@ -1,9 +1,14 @@
 package me.tylix.simplesurvival.game.warp;
 
 import com.google.gson.Gson;
+import jdk.internal.dynalink.linker.LinkerServices;
+import me.tylix.simplesurvival.SimpleSurvival;
 import me.tylix.simplesurvival.game.warp.data.WarpData;
+import me.tylix.simplesurvival.game.warp.inventory.WarpInventory;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,18 +41,22 @@ public class WarpManager {
     public void addWarp(final WarpData warpData) {
         this.warps.add(warpData);
         final List<String> warps = this.cfg.getStringList("Warps");
-        warps.add(new Gson().toJson(warpData));
+        warps.add(SimpleSurvival.INSTANCE.getPrettyGson().toJson(new Gson().toJsonTree(warpData)));
         this.cfg.set("Warps", warps);
         try {
             this.cfg.save(this.file);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers())
+            if (SimpleSurvival.INSTANCE.getChunkPlayer(onlinePlayer).isWarpInventoryOpen())
+                new WarpInventory(onlinePlayer.getUniqueId()).setItems(SimpleSurvival.INSTANCE.getWarpPage().get(onlinePlayer.getUniqueId())).load();
     }
 
     public void removeWarp(final WarpData warpData) {
         final List<String> warps = this.cfg.getStringList("Warps");
-        warps.remove(new Gson().toJson(this.getWarpByName(warpData.getName())));
+        warps.remove(SimpleSurvival.INSTANCE.getPrettyGson().toJson(new Gson().toJsonTree(this.getWarpByName(warpData.getName()))));
         this.cfg.set("Warps", warps);
         try {
             this.cfg.save(this.file);
@@ -55,6 +64,10 @@ public class WarpManager {
             e.printStackTrace();
         }
         this.warps.remove(warpData);
+
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers())
+            if (SimpleSurvival.INSTANCE.getChunkPlayer(onlinePlayer).isWarpInventoryOpen())
+                new WarpInventory(onlinePlayer.getUniqueId()).setItems(SimpleSurvival.INSTANCE.getWarpPage().get(onlinePlayer.getUniqueId())).load();
     }
 
     public boolean existsWarp(final String name) {
@@ -66,7 +79,7 @@ public class WarpManager {
 
     public WarpData getWarpByMaterial(final Material material) {
         for (WarpData warp : this.warps)
-            if (warp.getItemStack().getType().equals(material))
+            if (warp.getMaterial().equals(material))
                 return warp;
         return null;
     }

@@ -1,17 +1,17 @@
 package me.tylix.simplesurvival.game.warp.data;
 
 import me.tylix.simplesurvival.game.chunk.location.ChunkLocation;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.Material;
 
 public class WarpData {
 
     private final String name;
-    private final ItemStack itemStack;
+    private final Material material;
     private final ChunkLocation location;
 
-    public WarpData(String name, ItemStack itemStack, ChunkLocation location) {
+    public WarpData(String name, Material material, ChunkLocation location) {
         this.name = name;
-        this.itemStack = itemStack;
+        this.material = material;
         this.location = location;
     }
 
@@ -19,8 +19,8 @@ public class WarpData {
         return name;
     }
 
-    public ItemStack getItemStack() {
-        return itemStack;
+    public Material getMaterial() {
+        return material;
     }
 
     public ChunkLocation getLocation() {

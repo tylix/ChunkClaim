@@ -137,6 +137,7 @@ public class ProtectionListener implements Listener {
     public void handleClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
 
+        if (event.getCurrentItem() == null) return;
         if (event.getClickedInventory().getType().equals(InventoryType.PLAYER))
             event.setCancelled(event.getCurrentItem().equals(SimpleSurvival.Items.MENU));
     }
